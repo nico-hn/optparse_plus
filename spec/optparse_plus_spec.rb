@@ -106,4 +106,50 @@ YAML
       expect(opt.opt_plus).to be_instance_of(OptionParser::OptPlus)
     end
   end
+
+  describe OptionParser::OptPlus do
+    before do
+      @config_yaml_with_banner = <<YAML
+banner: #{File.basename($0)} [OPTION]
+first_option:
+  long: --first
+  short: -f
+  desc: First option for a test script
+second_option:
+  short: -s [arg]
+  desc: Second option for a test script
+YAML
+
+      @config_yaml_without_banner = <<YAML
+first_option:
+  short: -f
+  long: --first
+  desc: First option for a test script
+second_option:
+  short: -s [arg]
+  long: --second [=arg]
+  desc: Second option for a test script
+YAML
+    end
+
+    describe '#config_to_args' do
+      it 'can convert config in yaml to args of OptionParser#on' do
+        opt_plus = OptionParser::OptPlus.new(@config_yaml_without_banner)
+        args = opt_plus.config_to_args(:first_option)
+        expect(args).to eq(["-f", "--first", "First option for a test script"])
+      end
+
+      it 'expects to sort the order of arguments (short long desc)' do
+        opt_plus = OptionParser::OptPlus.new(@config_yaml_with_banner)
+        args = opt_plus.config_to_args(:first_option)
+        expect(args).to eq(["-f", "--first", "First option for a test script"])
+      end
+
+      it 'may ignore missing arguments' do
+        opt_plus = OptionParser::OptPlus.new(@config_yaml_with_banner)
+        args = opt_plus.config_to_args(:second_option)
+        expect(args).to eq(["-s [arg]", "Second option for a test script"])
+      end
+    end
+  end
 end

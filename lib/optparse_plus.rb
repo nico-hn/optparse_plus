@@ -64,6 +64,12 @@ module OptparsePlus
         .select {|option| not option.nil? }.flatten
       @opt.on(*args, callback)
     end
+
+    def config_to_args(label)
+      options = @config[label.to_s]
+      %w(short long desc).map {|type| options[type] }
+        .select {|option| not option.nil? }.flatten
+    end
   end
 
   def with(option_label, &callback)
