@@ -32,6 +32,23 @@ module OptparsePlus
     attr_reader :config, :config_source, :callbacks
     attr_writer :opt
 
+    ruby_options_yaml_source = <<YAML
+optplus_ruby_encoding:
+  short: -Eex[:in]
+  long: --encoding=ex[:in]
+  desc: specify the default external and internal character encodings
+optplus_ruby_debug:
+  short: -d
+  long: --debug
+  desc: set debugging flags (set $DEBUG to true)
+YAML
+
+    RUBY_OPTIONS = YAML.load(ruby_options_yaml_source)
+    RUBY_OPTION_TO_LABEL = {
+      "E" => :optplus_ruby_encoding,
+      "d" => :optplus_ruby_debug,
+    }
+
     def self.create_opt(config_yaml_source)
       opt_plus = OptPlus.new(config_yaml_source)
 
@@ -48,6 +65,7 @@ module OptparsePlus
     def initialize(config_yaml_source)
       @config_source = config_yaml_source
       @config = YAML.load(config_yaml_source)
+      @ruby_option_callbacks = ruby_option_callbacks
       @callbacks = {}
       @opt = nil
     end
@@ -62,10 +80,38 @@ module OptparsePlus
       @opt.on(*args, callback)
     end
 
-    def config_to_args(label)
-      options = @config[label.to_s]
+    def config_to_args(label, config=@config)
+      options = config[label.to_s]
       %w(short long desc).map {|type| options[type] }
         .select {|option| not option.nil? }.flatten
+    end
+
+    def inherit_ruby_options(*short_option_names)
+      short_option_names.each do |opt_name|
+        label = RUBY_OPTION_TO_LABEL[opt_name]
+        args = config_to_args(label, RUBY_OPTIONS)
+        callback = @ruby_option_callbacks[label]
+        @opt.on(*args, callback)
+      end
+    end
+
+    private
+
+    def ruby_set_encoding(given_opt)
+      external, internal = given_opt.split(/:/o, 2)
+      Encoding.default_external = external if external and not external.empty?
+      Encoding.default_internal = internal if internal and not internal.empty?
+    end
+
+    def ruby_set_debug
+      $DEBUG = true
+    end
+
+    def ruby_option_callbacks
+      {}.tap do |callbacks|
+        callbacks[:optplus_ruby_encoding] = proc {|given_opt| ruby_set_encoding(given_opt) }
+        callbacks[:optplus_ruby_debug] = proc {|given_opt| ruby_set_debug }
+      end
     end
   end
 
@@ -95,6 +141,10 @@ module OptparsePlus
   def setup_opt_plus(opt_plus)
     @opt_plus = opt_plus
     opt_plus.opt = self
+  end
+
+  def inherit_ruby_options(*short_option_names)
+    @opt_plus.inherit_ruby_options(*short_option_names)
   end
 end
 

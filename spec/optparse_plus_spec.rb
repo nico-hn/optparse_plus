@@ -211,5 +211,39 @@ YAML
         expect(args).to eq(["-s [arg]", "Second option for a test script"])
       end
     end
+
+    describe '#inherit_ruby_options' do
+      it 'can add -E option' do
+        external_encoding = Encoding.default_external
+        internal_encoding = Encoding.default_internal
+
+        Encoding.default_external = 'UTF-8'
+        expect(Encoding.default_external).to eq(Encoding::UTF_8)
+
+        set_argv("-EWindows-31J")
+        OptionParser.new_with_yaml(@config_yaml_with_banner) do |opt|
+          opt.inherit_ruby_options("E")
+          opt.parse!
+        end
+
+        expect(Encoding.default_external).to eq(Encoding::Windows_31J)
+        Encoding.default_external = external_encoding
+      end
+
+      it 'expect to print help message' do
+        expected_help_message = <<HELP
+rspec [OPTION]
+    -E, --encoding=ex[:in]           specify the default external and internal character encodings
+HELP
+
+        allow(STDOUT).to receive(:puts).with(expected_help_message)
+
+        set_argv("--help")
+        OptionParser.new_with_yaml(@config_yaml_with_banner) do |opt|
+          opt.inherit_ruby_options("E")
+          opt.parse!
+        end
+      end
+    end
   end
 end
