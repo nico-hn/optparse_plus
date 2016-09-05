@@ -30,6 +30,8 @@ require 'optparse_plus'
 first_value, second_value = nil, nil
 
 OptionParser.new_with_yaml do |opt|
+  opt.inherit_ruby_options("E") # Currently, -E and -d only are available options
+
   opt.on(:first_option) {|status| first_value = status }
   opt.on(:second_option) {|arg| second_value = arg }
   opt.parse!
@@ -96,6 +98,8 @@ second_option:
 YAML
 
 OptionParser.new_with_yaml(config_yaml) do |opt|
+  opt.inherit_ruby_options("E") # Currently, -E and -d only are available options
+
   opt.on(:first_option) {|status| first_value = status }
   opt.on(:second_option) {|arg| second_value = arg }
   opt.parse!
