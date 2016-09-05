@@ -73,6 +73,11 @@ module OptparsePlus
     @opt_plus.callbacks[option_label] = callback
   end
 
+  def on_with(option_label, &callback)
+    args = @opt_plus.config_to_args(option_label)
+    self.on(*args, callback)
+  end
+
   def parse!
     @opt_plus.opt_on
     super

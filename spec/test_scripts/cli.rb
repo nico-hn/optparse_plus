@@ -32,6 +32,14 @@ YAML
       opt.parse!
     end
   end
+
+  def parse_using_on_with
+    OptionParser.new_with_yaml(OPTION_YAML_SOURCE) do |opt|
+      opt.on_with(:first_option) {|status| @first_option_given = status }
+      opt.on_with(:second_option) {|arg| @second_option_value = arg }
+      opt.parse!
+    end
+  end
 end
 
 __END__
