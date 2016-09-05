@@ -36,11 +36,11 @@ module OptparsePlus
 optplus_ruby_encoding:
   short: -Eex[:in]
   long: --encoding=ex[:in]
-  desc: specify the default external and internal character encodings
+  description: specify the default external and internal character encodings
 optplus_ruby_debug:
   short: -d
   long: --debug
-  desc: set debugging flags (set $DEBUG to true)
+  description: set debugging flags (set $DEBUG to true)
 YAML
 
     RUBY_OPTIONS = YAML.load(ruby_options_yaml_source)
@@ -82,7 +82,7 @@ YAML
 
     def config_to_args(label, config=@config)
       options = config[label.to_s]
-      %w(short long desc).map {|type| options[type] }
+      %w(short long desc description).map {|type| options[type] }
         .select {|option| not option.nil? }.flatten
     end
 

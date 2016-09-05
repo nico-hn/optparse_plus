@@ -10,11 +10,11 @@ banner: #{File.basename($0)} [OPTION]
 first_option:
   short: -f
   long: --first
-  desc: First option for a test script
+  description: First option for a test script
 second_option:
   short: -s [arg]
   long: --second [=arg]
-  desc: Second option for a test script
+  description: Second option for a test script
 YAML
 
   def parse_with_after_end
@@ -60,8 +60,8 @@ banner: test_program [OPTION]
 first_option:
   short: -f
   long: --first
-  desc: First option for a test script
+  description: First option for a test script
 second_option:
   short: -s [arg]
   long: --second [=arg]
-  desc: Second option for a test script
+  description: Second option for a test script
