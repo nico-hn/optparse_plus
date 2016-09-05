@@ -35,4 +35,34 @@ describe OptparsePlus do
       expect(parser.first_option_given?).to be_falsy
     end
   end
+
+  context("when options are described in a multi-lines string") do
+    it 'accepts --second option with an argument' do
+      parser = OptparsePlusTest.new
+      set_argv("--first --second=something")
+      parser.parse_with_string_as_source
+      expect(parser.second_option_value).to eq("something")
+    end
+
+    it 'accepts --first option' do
+      parser = OptparsePlusTest.new
+      set_argv("--first --second=something")
+      parser.parse_with_string_as_source
+      expect(parser.first_option_given?).to be_truthy
+    end
+
+    it '--second option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--first")
+      parser.parse_with_string_as_source
+      expect(parser.second_option_value).to be_nil
+    end
+
+    it '--first option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--second=something")
+      parser.parse_with_string_as_source
+      expect(parser.first_option_given?).to be_falsy
+    end
+  end
 end
