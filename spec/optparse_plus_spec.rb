@@ -3,7 +3,7 @@ require File.join(__dir__, 'test_scripts/main')
 
 describe OptparsePlus do
   it 'should have a version number' do
-    OptparsePlus::VERSION.should_not be_nil
+    expect(OptparsePlus::VERSION).to_not be_nil
   end
 
   context("when options are described under __END__") do
