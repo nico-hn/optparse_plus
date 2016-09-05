@@ -18,14 +18,7 @@ module OptparsePlus
     def new_with_yaml(config_yaml_source=nil)
       cur_file = caller[0].split(/:/)[0]
       config_yaml_source ||= read_after_program_end(cur_file)
-      opt_plus = OptPlus.new(config_yaml_source)
-      if banner = opt_plus.config["banner"]
-        opt = ::OptionParser.new(banner)
-      else
-        opt = ::OptionParser.new
-      end
-
-      opt.setup_opt_plus(opt_plus)
+      opt = OptPlus.create_opt(config_yaml_source)
 
       if block_given?
         yield opt
