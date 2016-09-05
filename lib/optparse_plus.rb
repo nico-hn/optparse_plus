@@ -78,4 +78,5 @@ end
 class OptionParser
   prepend OptparsePlus
   extend OptparsePlus::ClassMethods
+  private_class_method :read_after_program_end
 end
