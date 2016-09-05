@@ -20,5 +20,19 @@ describe OptparsePlus do
       parser.parse_with_after_end
       expect(parser.first_option_given?).to be_truthy
     end
+
+    it '--second option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--first")
+      parser.parse_with_after_end
+      expect(parser.second_option_value).to be_nil
+    end
+
+    it '--first option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--second=something")
+      parser.parse_with_after_end
+      expect(parser.first_option_given?).to be_falsy
+    end
   end
 end
