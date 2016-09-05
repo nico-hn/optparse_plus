@@ -39,6 +39,19 @@ module OptparsePlus
     attr_reader :config, :config_source, :callbacks
     attr_writer :opt
 
+    def self.create_opt(config_yaml_source)
+      opt_plus = OptPlus.new(config_yaml_source)
+
+      if banner = opt_plus.config["banner"]
+        opt = ::OptionParser.new(banner)
+      else
+        opt = ::OptionParser.new
+      end
+
+      opt.setup_opt_plus(opt_plus)
+      opt
+    end
+
     def initialize(config_yaml_source)
       @config_source = config_yaml_source
       @config = YAML.load(config_yaml_source)

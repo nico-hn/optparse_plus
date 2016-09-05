@@ -65,4 +65,45 @@ describe OptparsePlus do
       expect(parser.first_option_given?).to be_falsy
     end
   end
+
+  describe 'creation of an instance of OptionParser' do
+    before do
+      @config_yaml_with_banner = <<YAML
+banner: #{File.basename($0)} [OPTION]
+first_option:
+  long: --first
+  short: -f
+  desc: First option for a test script
+second_option:
+  short: -s [arg]
+  desc: Second option for a test script
+YAML
+
+      @config_yaml_without_banner = <<YAML
+first_option:
+  short: -f
+  long: --first
+  desc: First option for a test script
+second_option:
+  short: -s [arg]
+  long: --second [=arg]
+  desc: Second option for a test script
+YAML
+    end
+
+    it 'expects to assign OptionParser#banner if the value is in the configuration' do
+      opt = OptionParser::OptPlus.create_opt(@config_yaml_with_banner)
+      expect(opt.banner).to eq('rspec [OPTION]')
+    end
+
+    it 'expects to assign a default value to OptionParser#banner unless the value is specified in the configuration' do
+      opt = OptionParser::OptPlus.create_opt(@config_yaml_without_banner)
+      expect(opt.banner).to eq('Usage: rspec [options]')
+    end
+
+    it 'expects to assign an instance of OptPlus to OptionParser#opt_plus' do
+      opt = OptionParser::OptPlus.create_opt(@config_yaml_without_banner)
+      expect(opt.opt_plus).to be_instance_of(OptionParser::OptPlus)
+    end
+  end
 end
