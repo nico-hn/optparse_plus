@@ -96,6 +96,36 @@ describe OptparsePlus do
     end
   end
 
+  context("when options are registered using OptionParser#on") do
+    it 'accepts --second option with an argument' do
+      parser = OptparsePlusTest.new
+      set_argv("--first --second=something")
+      parser.parse_using_on
+      expect(parser.second_option_value).to eq("something")
+    end
+
+    it 'accepts --first option' do
+      parser = OptparsePlusTest.new
+      set_argv("--first --second=something")
+      parser.parse_using_on
+      expect(parser.first_option_given?).to be_truthy
+    end
+
+    it '--second option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--first")
+      parser.parse_using_on
+      expect(parser.second_option_value).to be_nil
+    end
+
+    it '--first option may not be given' do
+      parser = OptparsePlusTest.new
+      set_argv("--second=something")
+      parser.parse_using_on
+      expect(parser.first_option_given?).to be_falsy
+    end
+  end
+
   describe 'creation of an instance of OptionParser' do
     before do
       @config_yaml_with_banner = <<YAML

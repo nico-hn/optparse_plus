@@ -40,6 +40,19 @@ YAML
       opt.parse!
     end
   end
+
+  def parse_using_on
+    OptionParser.new_with_yaml(OPTION_YAML_SOURCE) do |opt|
+      opt.on('-f', '--first',
+             'First option for a test script') {|status| @first_option_given = status }
+#      opt.on(:first_option) {|status| @first_option_given = status }
+
+#      opt.on('-s [arg]', '--second [=arg]',
+#             'Second option for a test script') {|arg| @second_option_value = arg }
+      opt.on(:second_option) {|arg| @second_option_value = arg }
+      opt.parse!
+    end
+  end
 end
 
 __END__

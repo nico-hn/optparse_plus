@@ -73,9 +73,18 @@ module OptparsePlus
     @opt_plus.callbacks[option_label] = callback
   end
 
+
   def on_with(option_label, &callback)
     args = @opt_plus.config_to_args(option_label)
-    self.on(*args, callback)
+    _orig_on(*args, callback)
+  end
+
+  def on(*args, &callback)
+    if args.length == 1 and args[0].kind_of? Symbol
+      on_with(*args, &callback)
+    else
+      super(*args)
+    end
   end
 
   def parse!
@@ -90,6 +99,8 @@ module OptparsePlus
 end
 
 class OptionParser
+  alias :_orig_on :on
+  private :_orig_on
   prepend OptparsePlus
   extend OptparsePlus::ClassMethods
   private_class_method :read_after_program_end
