@@ -57,11 +57,8 @@ module OptparsePlus
     end
 
     def reflect_callback(label)
-      label = label
       callback = @callbacks[label]
-      options = @config[label.to_s]
-      args = %w(short long desc).map {|type| options[type] }
-        .select {|option| not option.nil? }.flatten
+      args = config_to_args(label)
       @opt.on(*args, callback)
     end
 
