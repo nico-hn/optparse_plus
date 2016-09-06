@@ -8,7 +8,7 @@ module OptparsePlus
 
   module ClassMethods
     def read_after_program_end(cur_file)
-      own_source = File.read(cur_file)
+      own_source = open(cur_file) {|f| f.read }
       last_token = Ripper.lex(own_source)[-1]
       return nil unless last_token[1] == :on___end__
       start = last_token[0][0]

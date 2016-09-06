@@ -200,6 +200,15 @@ second_option:
 YAML
     end
 
+    describe '.new_with_yaml' do
+      it 'should not call File.read class method directly' do
+#        expect(File).to receive(:read) do
+          OptionParser.new_with_yaml(@config_yaml_with_banner)
+#        end
+        raise "An appropriate test should be added."
+      end
+    end
+
     describe '#config_to_args' do
       it 'can convert config in yaml to args of OptionParser#on' do
         opt_plus = OptionParser::OptPlus.new(@config_yaml_without_banner)
