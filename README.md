@@ -59,7 +59,7 @@ And if you execute:
 You will see the following message:
 
 ```
-test_program [OPTION]
+test_program.rb [OPTION]
     -E, --encoding=ex[:in]           specify the default external and internal character encodings
     -f, --first                      First option for a test script
     -s, --second [=arg]              Second option for a test script
