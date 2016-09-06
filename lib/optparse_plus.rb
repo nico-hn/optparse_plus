@@ -134,7 +134,7 @@ YAML
   end
 
   def parse!
-    @opt_plus.opt_on
+    @opt_plus.opt_on if @opt_plus
     super
   end
 

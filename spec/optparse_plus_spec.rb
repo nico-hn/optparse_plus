@@ -97,6 +97,14 @@ describe OptparsePlus do
   end
 
   context("when options are registered using OptionParser#on") do
+    it 'accepts normal definitions' do
+      parser = OptparsePlusTest.new
+      set_argv("--first --second=something")
+      parser.parse_normal_definitions_using_on
+      expect(parser.first_option_given?).to be_truthy
+      expect(parser.second_option_value).to eq("something")
+    end
+
     it 'accepts --second option with an argument' do
       parser = OptparsePlusTest.new
       set_argv("--first --second=something")

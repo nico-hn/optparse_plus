@@ -53,6 +53,19 @@ YAML
       opt.parse!
     end
   end
+
+  def parse_normal_definitions_using_on
+    OptionParser.new("#{File.basename($0)} [OPTION]") do |opt|
+      opt.on('-f', '--first',
+             'First option for a test script') {|status| @first_option_given = status }
+#      opt.on(:first_option) {|status| @first_option_given = status }
+
+      opt.on('-s [arg]', '--second [=arg]',
+             'Second option for a test script') {|arg| @second_option_value = arg }
+#      opt.on(:second_option) {|arg| @second_option_value = arg }
+      opt.parse!
+    end
+  end
 end
 
 __END__
