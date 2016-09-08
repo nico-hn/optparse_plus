@@ -266,6 +266,22 @@ YAML
         expect(Encoding.default_internal).to eq(Encoding::Windows_31J)
       end
 
+      it '-E option can set external and internal encodings at once' do
+        Encoding.default_external = 'UTF-8'
+        Encoding.default_internal = 'UTF-8'
+        expect(Encoding.default_external).to eq(Encoding::UTF_8)
+        expect(Encoding.default_internal).to eq(Encoding::UTF_8)
+
+        set_argv("-EWindows-31J:Windows-31J")
+        OptionParser.new_with_yaml(@config_yaml_with_banner) do |opt|
+          opt.inherit_ruby_options("E")
+          opt.parse!
+        end
+
+        expect(Encoding.default_external).to eq(Encoding::Windows_31J)
+        expect(Encoding.default_internal).to eq(Encoding::Windows_31J)
+      end
+
       it 'expect to print help message' do
         expected_help_message = <<HELP
 rspec [OPTION]
