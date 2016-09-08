@@ -230,10 +230,17 @@ YAML
     end
 
     describe '#inherit_ruby_options' do
-      it 'can add -E option' do
-        external_encoding = Encoding.default_external
-        internal_encoding = Encoding.default_internal
+      before do
+        @external_encoding = Encoding.default_external
+        @internal_encoding = Encoding.default_internal
+      end
 
+      after do
+        Encoding.default_external = @external_encoding
+        Encoding.default_internal = @internal_encoding
+      end
+
+      it 'can add -E option' do
         Encoding.default_external = 'UTF-8'
         expect(Encoding.default_external).to eq(Encoding::UTF_8)
 
@@ -244,7 +251,6 @@ YAML
         end
 
         expect(Encoding.default_external).to eq(Encoding::Windows_31J)
-        Encoding.default_external = external_encoding
       end
 
       it 'expect to print help message' do
