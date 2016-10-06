@@ -16,7 +16,7 @@ module OptparsePlus
     end
 
     def new_with_yaml(config_yaml_source=nil)
-      cur_file = caller[0].split(/:/)[0]
+      cur_file = extract_cur_file_path(caller[0])
       config_yaml_source ||= read_after_program_end(cur_file)
       opt = OptPlus.create_opt(config_yaml_source)
 
@@ -24,6 +24,20 @@ module OptparsePlus
         yield opt
       else
         opt
+      end
+    end
+
+    def windows?
+      /mswin(?!ce)|mingw|cygwin|bccwin/ =~ RUBY_PLATFORM
+    end
+
+    private
+
+    def extract_cur_file_path(caller_info)
+      if windows? and /\A[A-Z]:/i =~ caller_info
+        caller_info.split(/:/, 3)[0, 2].join(':')
+      else
+        caller_info.split(/:/)[0]
       end
     end
   end
