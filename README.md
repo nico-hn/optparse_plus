@@ -1,6 +1,6 @@
 # OptparsePlus
 
-OptparsePlus adds some helper methods to OptionParser, and let you define command line options more easily.
+OptparsePlus adds some helper methods to OptionParser, and lets you define command line options more easily.
 
 In your script, simply require 'optparse_plus' in stead of 'optparse', then the new methods of OptionParser are available for you.
 
